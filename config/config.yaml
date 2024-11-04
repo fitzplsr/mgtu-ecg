@@ -1,0 +1,14 @@
+httpServer:
+  address: "0.0.0.0:8096"
+  timeout: 4s
+  idleTimeout: 30s
+  readHeaderTimeout: 10s
+authJwt:
+  accessExpirationTime: 10s
+refresh:
+  refreshExpirationTime: 24h
+db:
+  connectTimeout: 5m
+logger:
+#  logFilePath:
+  environment: local

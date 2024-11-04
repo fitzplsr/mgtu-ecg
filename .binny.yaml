@@ -1,0 +1,104 @@
+tools:
+
+  - name: gh
+    version:
+      want: v2.35.0
+    method: github-release
+    with:
+      repo: cli/cli
+
+  - name: quill
+    version:
+      want: v0.4.1
+    method: github-release
+    with:
+      repo: anchore/quill
+
+  - name: chronicle
+    version:
+      want: v0.8.0
+    method: github-release
+    with:
+      repo: anchore/chronicle
+
+  - name: gosimports
+    version:
+      want: v0.3.8
+    method: github-release
+    with:
+      repo: rinchsan/gosimports
+
+  - name: glow
+    version:
+      want: v1.5.1
+    method: github-release
+    with:
+      repo: charmbracelet/glow
+
+  - name: goreleaser
+    version:
+      want: v1.21.1
+    method: github-release
+    with:
+      repo: goreleaser/goreleaser
+
+  - name: golangci-lint
+    version:
+      want: v1.54.2
+    method: github-release
+    with:
+      repo: golangci/golangci-lint
+
+  - name: task
+    version:
+      want: v3.30.1
+    method: github-release
+    with:
+      repo: go-task/task
+
+  - name: swag
+    version:
+      want: latest
+      method: go-proxy
+      with:
+        module: github.com/swaggo/swag
+        allow-unresolved-version: true
+    method: go-install
+    with:
+      entrypoint: cmd/swag
+      module: github.com/swaggo/swag
+
+  - name: easyjson
+    version:
+      want: latest
+      method: go-proxy
+      with:
+        module: github.com/mailru/easyjson
+        allow-unresolved-version: true
+    method: go-install
+    with:
+      entrypoint: easyjson
+      module: github.com/mailru/easyjson
+
+  - name: sqlc
+    version:
+      want: latest
+      method: go-proxy
+      with:
+        module: github.com/sqlc-dev/sqlc
+        allow-unresolved-version: true
+    method: go-install
+    with:
+      entrypoint: cmd/sqlc
+      module: github.com/sqlc-dev/sqlc
+
+  - name: enumer
+    version:
+      want: latest
+      method: go-proxy
+      with:
+        module: github.com/dmarkham/enumer
+        allow-unresolved-version: true
+    method: go-install
+    with:
+      module: github.com/dmarkham/enumer
