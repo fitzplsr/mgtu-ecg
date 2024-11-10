@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+var _ auth.Usecase = (*Auth)(nil)
+
 type Params struct {
 	fx.In
 

@@ -4,14 +4,13 @@ import (
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/auther"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/db"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/refresh"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/server"
 	"github.com/fitzplsr/mgtu-ecg/pkg/logger"
 	"github.com/ilyakaznacheev/cleanenv"
+	_ "github.com/joho/godotenv/autoload"
 	"go.uber.org/fx"
 	"log"
 	"os"
-	"time"
-
-	_ "github.com/joho/godotenv/autoload"
 )
 
 type Config struct {
@@ -19,29 +18,24 @@ type Config struct {
 
 	Logger logger.Config `yaml:"logger"`
 
-	HTTPServer HTTPServer     `yaml:"httpServer"`
+	HTTPServer server.Config  `yaml:"httpServer"`
 	Auth       auther.Config  `yaml:"authJWT"`
 	Refresh    refresh.Config `yaml:"refresh"`
 	DB         db.Config      `yaml:"db"`
 	Redis      db.RedisConfig `yaml:"redis"`
-}
-
-type HTTPServer struct {
-	Address           string        `yaml:"address" env-default:"localhost:8080"`
-	Timeout           time.Duration `yaml:"timeout" env-default:"4s"`
-	IdleTimeout       time.Duration `yaml:"idleTimeout" env-default:"60s"`
-	ReadHeaderTimeout time.Duration `yaml:"readHeaderTimeout" env-defualt:"10s"`
+	Minio      db.MinioConfig `yaml:"minio"`
 }
 
 type Out struct {
 	fx.Out
 
 	Logger     logger.Config
-	HTTPServer HTTPServer
+	HTTPServer server.Config
 	Auth       auther.Config
 	DB         db.Config
 	Redis      db.RedisConfig
 	Refresh    refresh.Config
+	Minio      db.MinioConfig
 }
 
 func MustLoad() Out {
@@ -69,5 +63,6 @@ func MustLoad() Out {
 		DB:         cfg.DB,
 		Redis:      cfg.Redis,
 		Refresh:    cfg.Refresh,
+		Minio:      cfg.Minio,
 	}
 }

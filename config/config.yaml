@@ -3,12 +3,15 @@ httpServer:
   timeout: 4s
   idleTimeout: 30s
   readHeaderTimeout: 10s
+  bodyLimit: 50
 authJwt:
   accessExpirationTime: 10s
 refresh:
   refreshExpirationTime: 24h
 db:
   connectTimeout: 5m
+minio:
+  useSSL: false
 logger:
 #  logFilePath:
   environment: local

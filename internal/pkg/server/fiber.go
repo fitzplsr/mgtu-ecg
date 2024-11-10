@@ -9,6 +9,8 @@ import (
 	"github.com/mailru/easyjson"
 )
 
+const MB = 2 << 20
+
 func customJSONMarshal(v any) ([]byte, error) {
 	return easyjson.Marshal(v.(easyjson.Marshaler))
 }
@@ -32,6 +34,7 @@ func customJSONUnmarshal(data []byte, v any) error {
 // @name Authorization
 func NewFiberApp(p AppParams) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
+		BodyLimit:   int(p.Config.BodyLimitMB) * MB,
 		JSONEncoder: customJSONMarshal,
 		JSONDecoder: customJSONUnmarshal,
 	})
@@ -64,6 +67,12 @@ func NewFiberApp(p AppParams) (*fiber.App, error) {
 	profile.Use(p.ProtectedMW.MW)
 	{
 		profile.Put("update", p.ProfileHandler.Update)
+	}
+
+	analyse := v1.Group("analyse")
+	analyse.Use(p.ProtectedMW.MW)
+	{
+		analyse.Post("upload", p.AnalyseHandler.UploadFile)
 	}
 
 	v1.Get("/swagger/*", swagger.HandlerDefault) // default

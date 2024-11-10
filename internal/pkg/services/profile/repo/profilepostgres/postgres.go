@@ -5,6 +5,7 @@ import (
 	"errors"
 	models "github.com/fitzplsr/mgtu-ecg/gen"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/utils/pghelper"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/utils/txer"
@@ -17,6 +18,9 @@ import (
 	"go.uber.org/zap"
 	"time"
 )
+
+var _ auth.Repo = (*Profile)(nil)
+var _ profile.Repo = (*Profile)(nil)
 
 type PostgresParams struct {
 	fx.In

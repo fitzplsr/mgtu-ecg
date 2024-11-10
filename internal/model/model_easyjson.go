@@ -614,7 +614,119 @@ func (v *Session) UnmarshalJSON(data []byte) error {
 func (v *Session) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel6(l, v)
 }
-func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(in *jlexer.Lexer, out *ErrorResponse) {
+func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(in *jlexer.Lexer, out *FileInfo) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "id":
+			out.ID = int64(in.Int64())
+		case "filename":
+			out.Filename = string(in.String())
+		case "size":
+			out.Size = int32(in.Int32())
+		case "format":
+			out.Format = string(in.String())
+		case "content-type":
+			out.ContentType = string(in.String())
+		case "created_at":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.CreatedAt).UnmarshalJSON(data))
+			}
+		case "updated_at":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.UpdatedAt).UnmarshalJSON(data))
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(out *jwriter.Writer, in FileInfo) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"id\":"
+		out.RawString(prefix[1:])
+		out.Int64(int64(in.ID))
+	}
+	{
+		const prefix string = ",\"filename\":"
+		out.RawString(prefix)
+		out.String(string(in.Filename))
+	}
+	{
+		const prefix string = ",\"size\":"
+		out.RawString(prefix)
+		out.Int32(int32(in.Size))
+	}
+	{
+		const prefix string = ",\"format\":"
+		out.RawString(prefix)
+		out.String(string(in.Format))
+	}
+	{
+		const prefix string = ",\"content-type\":"
+		out.RawString(prefix)
+		out.String(string(in.ContentType))
+	}
+	{
+		const prefix string = ",\"created_at\":"
+		out.RawString(prefix)
+		out.Raw((in.CreatedAt).MarshalJSON())
+	}
+	{
+		const prefix string = ",\"updated_at\":"
+		out.RawString(prefix)
+		out.Raw((in.UpdatedAt).MarshalJSON())
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v FileInfo) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v FileInfo) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *FileInfo) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *FileInfo) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(l, v)
+}
+func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(in *jlexer.Lexer, out *ErrorResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -645,7 +757,7 @@ func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(in *jlexer.Lex
 		in.Consumed()
 	}
 }
-func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(out *jwriter.Writer, in ErrorResponse) {
+func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(out *jwriter.Writer, in ErrorResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -660,27 +772,27 @@ func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(out *jwriter.W
 // MarshalJSON supports json.Marshaler interface
 func (v ErrorResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(&w, v)
+	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v ErrorResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel7(w, v)
+	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *ErrorResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(&r, v)
+	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *ErrorResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel7(l, v)
+	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(l, v)
 }
-func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(in *jlexer.Lexer, out *AuthResponse) {
+func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel9(in *jlexer.Lexer, out *AuthResponse) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -721,7 +833,7 @@ func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(in *jlexer.Lex
 		in.Consumed()
 	}
 }
-func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(out *jwriter.Writer, in AuthResponse) {
+func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel9(out *jwriter.Writer, in AuthResponse) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -745,23 +857,23 @@ func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(out *jwriter.W
 // MarshalJSON supports json.Marshaler interface
 func (v AuthResponse) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(&w, v)
+	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel9(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v AuthResponse) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel8(w, v)
+	easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel9(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *AuthResponse) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(&r, v)
+	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel9(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *AuthResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel8(l, v)
+	easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel9(l, v)
 }

@@ -41,21 +41,18 @@ func New(p Params) (*Profile, error) {
 
 // TODO таймаут в UserContext
 func (h *Profile) Update(c *fiber.Ctx) error {
-	log := h.logger.With(
-		zap.String(consts.RequestID, c.Get(consts.RequestID)), // or c.Context().ID()
-	)
-	log.Debug("start")
+	h.logger.Debug("start")
 
 	userID, ok := c.Locals(middleware.UserIDKey).(uuid.UUID)
 	if !ok {
-		log.Error("user id from locals")
+		h.logger.Error("user id from locals")
 		return utils.Send401(c, messages.Unauthorized)
 	}
 
 	var payload model.UpdateUserPayload
 	err := c.BodyParser(&payload)
 	if err != nil {
-		log.Error("failed to parse request body", zap.Error(err))
+		h.logger.Error("failed to parse request body", zap.Error(err))
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 

@@ -8,6 +8,8 @@ import (
 	"go.uber.org/zap"
 )
 
+var _ profile.Usecase = (*Profile)(nil)
+
 type Params struct {
 	fx.In
 

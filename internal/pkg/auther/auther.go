@@ -3,12 +3,15 @@ package auther
 import (
 	"errors"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"time"
 )
+
+var _ middleware.JWTer = (*Auther)(nil)
 
 type Params struct {
 	fx.In
