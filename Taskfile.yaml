@@ -1,0 +1,269 @@
+version: "3"
+vars:
+  OWNER: fitzplsr
+  PROJECT: mgtu-ecg
+
+  CACHE_IMAGE: ghcr.io/{{ .OWNER }}/{{ .PROJECT }}/test-fixture-cache:latest
+
+  # static file dirs
+  TOOL_DIR: .tool
+  TMP_DIR: .tmp
+  ORAS_CACHE: "{{ .TMP_DIR }}/oras-cache"
+  CACHE_PATHS_FILE: "{{ .TMP_DIR }}/cache_paths.json"
+  LAST_CACHE_PULL_FILE: "{{ .TMP_DIR }}/last_cache_paths.json"
+
+  # TOOLS
+  TASK: "{{ .TOOL_DIR }}/task"
+
+  # used for changelog generation
+  CHANGELOG: CHANGELOG.md
+  NEXT_VERSION: VERSION
+
+  # used for snapshot builds
+  OS:
+    sh: uname -s | tr '[:upper:]' '[:lower:]'
+  ARCH:
+    sh: |
+      [ "$(uname -m)" = "x86_64" ] && echo "amd64_v1" || echo $(uname -m)
+  PROJECT_ROOT:
+    sh: echo $PWD
+  # note: the snapshot dir must be a relative path starting with ./
+  SNAPSHOT_DIR: ./snapshot
+  SNAPSHOT_BIN: "{{ .PROJECT_ROOT }}/{{ .SNAPSHOT_DIR }}/{{ .OS }}-build_{{ .OS }}_{{ .ARCH }}/{{ .PROJECT }}"
+  SNAPSHOT_CMD: "{{ .TOOL_DIR }}/goreleaser release --config {{ .TMP_DIR }}/goreleaser.yaml --clean --snapshot --skip=publish --skip=sign"
+  BUILD_CMD: "{{ .TOOL_DIR }}/goreleaser build   --config {{ .TMP_DIR }}/goreleaser.yaml --clean --snapshot --single-target"
+  RELEASE_CMD: "{{ .TOOL_DIR }}/goreleaser release --clean --release-notes {{ .CHANGELOG }}"
+  VERSION:
+    sh: git describe --dirty --always --tags
+
+  # used for install and acceptance testing
+  COMPARE_DIR: ./test/compare
+  COMPARE_TEST_IMAGE: centos:8.2.2004
+
+env:
+  GNUMAKEFLAGS: '--no-print-directory'
+
+tasks:
+
+  ## High-level tasks #################################
+
+  default:
+    desc: Run all validation tasks
+    aliases:
+      - pr-validations
+      - validations
+    cmds:
+      - task: static-analysis
+      - task: test
+      - task: install-test
+
+  static-analysis:
+    desc: Run all static analysis tasks
+    cmds:
+      - task: check-go-mod-tidy
+      - task: check-licenses
+      - task: lint
+      - task: check-json-schema-drift
+      - task: check-binary-fixture-size
+
+  test:
+    desc: Run all levels of test
+    cmds:
+      - task: unit
+      - task: integration
+      - task: validate-cyclonedx-schema
+      - task: benchmark
+      - task: test-utils
+      - task: cli
+      - task: check-docker-cache
+
+  ## Bootstrap tasks #################################
+
+  binny:
+    internal: true
+    # desc: Get the binny tool
+    generates:
+      - "{{ .TOOL_DIR }}/binny"
+    status:
+      - "test -f {{ .TOOL_DIR }}/binny"
+    cmd: "curl -sSfL https://raw.githubusercontent.com/anchore/binny/main/install.sh | sh -s -- -b .tool"
+  #    silent: true
+
+  tools:
+    desc: Install all tools needed for CI and local development
+    deps: [ binny ]
+    aliases:
+      - bootstrap
+    generates:
+      - ".binny.yaml"
+      - "{{ .TOOL_DIR }}/*"
+    status:
+      - "{{ .TOOL_DIR }}/binny check -v"
+    cmd: "{{ .TOOL_DIR }}/binny install -v"
+    silent: true
+
+  update-tools:
+    desc: Update pinned versions of all tools to their latest available versions
+    deps: [ binny ]
+    generates:
+      - ".binny.yaml"
+      - "{{ .TOOL_DIR }}/*"
+    cmd: "{{ .TOOL_DIR }}/binny update -v"
+    silent: true
+
+  list-tools:
+    desc: List all tools needed for CI and local development
+    deps: [ binny ]
+    cmd: "{{ .TOOL_DIR }}/binny list"
+    silent: true
+
+  list-tool-updates:
+    desc: List all tools that are not up to date relative to the binny config
+    deps: [ binny ]
+    cmd: "{{ .TOOL_DIR }}/binny list --updates"
+    silent: true
+
+  tmpdir:
+    silent: true
+    generates:
+      - "{{ .TMP_DIR }}"
+    cmd: "mkdir -p {{ .TMP_DIR }}"
+
+  ## Static analysis tasks #################################
+
+  format:
+    desc: Auto-format all source code
+    deps: [ tools ]
+    cmds:
+      - gofmt -w -s .
+      - "{{ .TOOL_DIR }}/gosimports -local github.com/anchore -w ."
+      - go mod tidy
+
+  lint-fix:
+    desc: Auto-format all source code + run golangci lint fixers
+    deps: [ tools ]
+    cmds:
+      - task: format
+      - "{{ .TOOL_DIR }}/golangci-lint run --tests=false --fix"
+
+  lint:
+    desc: Run gofmt + golangci lint checks
+    vars:
+      BAD_FMT_FILES:
+        sh: gofmt -l -s .
+      BAD_FILE_NAMES:
+        sh: "find . | grep -e ':' || true"
+    deps: [ tools ]
+    cmds:
+      # ensure there are no go fmt differences
+      - cmd: 'test -z "{{ .BAD_FMT_FILES }}" || (echo "files with gofmt issues: [{{ .BAD_FMT_FILES }}]"; exit 1)'
+        silent: true
+      # ensure there are no files with ":" in it (a known back case in the go ecosystem)
+      - cmd: 'test -z "{{ .BAD_FILE_NAMES }}" || (echo "files with bad names: [{{ .BAD_FILE_NAMES }}]"; exit 1)'
+        silent: true
+      # run linting
+      - "{{ .TOOL_DIR }}/golangci-lint run --tests=false"
+
+  check-go-mod-tidy:
+    # desc: Ensure go.mod and go.sum are up to date
+    cmds:
+      - cmd: .github/scripts/go-mod-tidy-check.sh && echo "go.mod and go.sum are tidy!"
+        silent: true
+
+  ## Testing tasks #################################
+
+  unit:
+    desc: Run unit tests
+    deps:
+      - tmpdir
+      - fixtures
+    vars:
+      TEST_PKGS:
+        sh: "go list ./... | grep -v {{ .OWNER }}/{{ .PROJECT }}/test | grep -v {{ .OWNER }}/{{ .PROJECT }}/cmd/syft/internal/test | tr '\n' ' '"
+
+      # unit test coverage threshold (in % coverage)
+      COVERAGE_THRESHOLD: 62
+    cmds:
+      - "go test -coverprofile {{ .TMP_DIR }}/unit-coverage-details.txt {{ .TEST_PKGS }}"
+      - cmd: ".github/scripts/coverage.py {{ .COVERAGE_THRESHOLD }} {{ .TMP_DIR }}/unit-coverage-details.txt"
+        silent: true
+
+  integration:
+    desc: Run integration tests
+    cmds:
+      - "go test -v ./cmd/syft/internal/test/integration"
+      # exercise most of the CLI with the data race detector
+      - "go run -race cmd/syft/main.go alpine:latest"
+
+  ## Benchmark test targets #################################
+
+  benchmark:
+    deps: [ tmpdir ]
+    generates:
+      - "{{ .TMP_DIR }}/benchmark-main.txt"
+    cmds:
+      - "go test -p 1 -run=^Benchmark -bench=. -count=7 -benchmem ./... | tee {{ .TMP_DIR }}/benchmark-{{ .VERSION }}.txt"
+      - |
+        bash -c "(test -s {{ .TMP_DIR }}/benchmark-main.txt && \
+        {{ .TOOL_DIR }}/benchstat {{ .TMP_DIR }}/benchmark-main.txt {{ .TMP_DIR }}/benchmark-{{ .VERSION }}.txt || \
+        {{ .TOOL_DIR }}/benchstat {{ .TMP_DIR }}/benchmark-{{ .VERSION }}.txt) \
+        | tee {{ .TMP_DIR }}/benchstat.txt"
+
+  show-benchstat:
+    deps: [ benchmark, tmpdir ]
+    cmds:
+      - cmd: "cat {{ .TMP_DIR }}/benchstat.txt"
+        silent: true
+
+
+  ## Test-fixture-related targets #################################
+
+  check-docker-cache:
+    desc: Ensure docker caches aren't using too much disk space
+    silent: true
+    cmd: |
+      total_size=$(find . | grep cache | grep tar | xargs du -c | grep total | awk '{print $1}')
+      find . | grep cache | grep tar | xargs du
+      echo "total $total_size KB"
+      
+      if [ "$total_size" -gt 1048576 ]; then
+        echo 'docker cache is larger than 1GB'
+        exit 1
+      fi
+
+
+
+  ## gen tasks
+
+  swag:
+    deps: [ tools ]
+    dir: '{{.USER_WORKING_DIR}}'
+    vars:
+      SWAG: '{{ .TOOL_DIR }}/swag'
+    cmd: '{{ .SWAG }} init -g ./internal/pkg/server/fiber.go'
+
+  gen-all:
+    deps: [ tools ]
+    dir: '{{.USER_WORKING_DIR}}'
+    cmd: 'go generate ./...'
+
+  sqlc:
+    deps: [ tools ]
+    dir: '{{.USER_WORKING_DIR}}'
+    vars:
+      SQLC: '{{ .TOOL_DIR }}/sqlc'
+    cmd: '{{ .SQLC }} generate'
+
+  easyjson:
+    deps: [ tools ]
+    dir: '{{.USER_WORKING_DIR}}'
+    vars:
+      EASYJSON: '{{ .TOOL_DIR }}/easyjson'
+    cmd: '{{ .EASYJSON }} -pkg internal/model'
+
+
+  ## bambam tasks
+
+  compose-local:
+    dir: '{{.USER_WORKING_DIR}}'
+    cmd: 'docker compose -f "local-docker-compose.yaml" up -d'
