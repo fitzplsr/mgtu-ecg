@@ -39,6 +39,17 @@ func New(p Params) (*Analyse, error) {
 }
 
 // TODO list files, download file
+
+// @Summary Upload a file
+// @Description Upload a file associated with the current user
+// @Tags analyse
+// @Security BearerAuth
+// @Accept multipart/form-data
+// @Produce application/json
+// @Param file formData file true "File to upload"
+// @Success 201 {object} model.FileInfo
+// @Failure 500 {object} model.ErrorResponse
+// @Router      /api/v1/analyse/upload [post]
 func (a *Analyse) UploadFile(c *fiber.Ctx) error {
 	userID, ok := c.Locals(middleware.UserIDKey).(uuid.UUID)
 	if !ok {
@@ -51,10 +62,10 @@ func (a *Analyse) UploadFile(c *fiber.Ctx) error {
 		return err
 	}
 
-	fileMeta, err := a.uc.Upload(c.UserContext(), file, userID)
+	fileInfo, err := a.uc.Upload(c.UserContext(), file, userID)
 	if err != nil {
 		return utils.Send500(c, messages.InternalServerError)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fileMeta)
+	return c.Status(fiber.StatusCreated).JSON(fileInfo)
 }
