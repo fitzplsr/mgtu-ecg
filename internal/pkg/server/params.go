@@ -2,8 +2,9 @@ package server
 
 import (
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse/delivery/analysehttp"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth/delivery/authhttp"
-	profile "github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile/delivery/profilehttp"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile/delivery/profilehttp"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -19,10 +20,12 @@ type AppParams struct {
 	fx.In
 
 	Logger *zap.Logger
+	Config Config
 
 	// handlers
 	AuthHandler    *authhttp.Auth
-	ProfileHandler *profile.Profile
+	ProfileHandler *profilehttp.Profile
+	AnalyseHandler *analysehttp.Analyse
 
 	// middlewares
 	ProtectedMW *middleware.ProtectedMW

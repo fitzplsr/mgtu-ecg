@@ -5,13 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/session"
 	"github.com/go-redis/redis/v8"
 	"github.com/mailru/easyjson"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"time"
 )
+
+var _ middleware.SessionStorage = (*Storage)(nil)
 
 type Params struct {
 	fx.In
@@ -69,7 +71,7 @@ func (s *Storage) GetByUserID(ctx context.Context, userID string) (*model.Sessio
 
 		return &model.Session{}, fmt.Errorf("unmarshal session: %w", err)
 	}
-	userSession.CreatedAt = time.Now()
+	//userSession.CreatedAt = time.Now()
 
 	return &userSession, nil
 }

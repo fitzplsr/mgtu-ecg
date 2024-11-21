@@ -5,10 +5,15 @@ import (
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/auther"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/config"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/db"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage/miniostorage"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/metrics"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/pprof"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/server"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse/analyseusecase"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse/delivery/analysehttp"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse/repo/analysepostgres"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth/authusecase"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth/delivery/authhttp"
@@ -46,6 +51,7 @@ func main() {
 			db.NewPostgresConn,
 			db.NewPostgresPool,
 			db.NewRedisClient,
+			db.NewMinioClient,
 
 			// validator
 			validate.New,
@@ -58,6 +64,11 @@ func main() {
 			// redis
 			fx.Annotate(storage.NewStorage,
 				fx.As(new(middleware.SessionStorage)),
+			),
+
+			// minio
+			fx.Annotate(miniostorage.New,
+				fx.As(new(analyse.FileStorage)),
 			),
 
 			// middlewares
@@ -80,6 +91,15 @@ func main() {
 			),
 			fx.Annotate(profilepostgres.New,
 				fx.As(new(profile.Repo)),
+			),
+
+			// analyse service
+			analysehttp.New,
+			fx.Annotate(analyseusecase.New,
+				fx.As(new(analyse.Usecase)),
+			),
+			fx.Annotate(analysepostgres.New,
+				fx.As(new(analyse.Repo)),
 			),
 		),
 		fx.WithLogger(func(l *zap.Logger) fxevent.Logger {

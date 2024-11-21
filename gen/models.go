@@ -8,6 +8,18 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Filemeta struct {
+	ID          int32
+	Format      int16
+	Size        int32
+	Filename    string
+	ContentType string
+	Key         string
+	UserID      pgtype.UUID
+	CreatedAt   pgtype.Timestamptz
+	UpdatedAt   pgtype.Timestamptz
+}
+
 type User struct {
 	ID           pgtype.UUID
 	Role         int32
