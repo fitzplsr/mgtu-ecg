@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS users
 );
 
 -- TODO add constraints
+
+CREATE TRIGGER modify_users_updated_at
+    BEFORE UPDATE
+    ON users
+    FOR EACH ROW
+EXECUTE PROCEDURE public.moddatetime(updated_at);
