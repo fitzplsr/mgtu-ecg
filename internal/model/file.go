@@ -1,13 +1,12 @@
 package model
 
 import (
-	"github.com/google/uuid"
 	"time"
 )
 
 //easyjson:skip
 type FileMeta struct {
-	UserID      uuid.UUID  `json:"-"`
+	PatientID   int        `json:"patient_id"`
 	Key         string     `json:"-"`
 	Filename    string     `json:"filename"`
 	Size        int32      `json:"size"`
@@ -18,7 +17,7 @@ type FileMeta struct {
 //easyjson:json
 type FileInfo struct {
 	ID          int64     `json:"id"`
-	UserID      uuid.UUID `json:"-"`
+	PatientID   int       `json:"patient_id"`
 	Key         string    `json:"-"`
 	Filename    string    `json:"filename"`
 	Size        int32     `json:"size"`
@@ -26,4 +25,10 @@ type FileInfo struct {
 	ContentType string    `json:"content-type"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+//easyjson:json
+type PatientFiles struct {
+	PatientID int         `json:"-"`
+	Files     []*FileInfo `json:"files"`
 }

@@ -1,8 +1,10 @@
 package config
 
 import (
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/analyser"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/auther"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/db"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage/fsstorage"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/refresh"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/server"
 	"github.com/fitzplsr/mgtu-ecg/pkg/logger"
@@ -18,24 +20,28 @@ type Config struct {
 
 	Logger logger.Config `yaml:"logger"`
 
-	HTTPServer server.Config  `yaml:"httpServer"`
-	Auth       auther.Config  `yaml:"authJWT"`
-	Refresh    refresh.Config `yaml:"refresh"`
-	DB         db.Config      `yaml:"db"`
-	Redis      db.RedisConfig `yaml:"redis"`
-	Minio      db.MinioConfig `yaml:"minio"`
+	HTTPServer    server.Config    `yaml:"httpServer"`
+	Auth          auther.Config    `yaml:"authJWT"`
+	Refresh       refresh.Config   `yaml:"refresh"`
+	DB            db.Config        `yaml:"db"`
+	Redis         db.RedisConfig   `yaml:"redis"`
+	Minio         db.MinioConfig   `yaml:"minio"`
+	FS            fsstorage.Config `yaml:"fs"`
+	AnalyseClient analyser.Config  `yaml:"analyse-client"`
 }
 
 type Out struct {
 	fx.Out
 
-	Logger     logger.Config
-	HTTPServer server.Config
-	Auth       auther.Config
-	DB         db.Config
-	Redis      db.RedisConfig
-	Refresh    refresh.Config
-	Minio      db.MinioConfig
+	Logger        logger.Config
+	HTTPServer    server.Config
+	Auth          auther.Config
+	DB            db.Config
+	Redis         db.RedisConfig
+	Refresh       refresh.Config
+	Minio         db.MinioConfig
+	FS            fsstorage.Config
+	AnalyseClient analyser.Config
 }
 
 func MustLoad() Out {
@@ -57,12 +63,14 @@ func MustLoad() Out {
 	}
 
 	return Out{
-		Logger:     cfg.Logger,
-		HTTPServer: cfg.HTTPServer,
-		Auth:       cfg.Auth,
-		DB:         cfg.DB,
-		Redis:      cfg.Redis,
-		Refresh:    cfg.Refresh,
-		Minio:      cfg.Minio,
+		Logger:        cfg.Logger,
+		HTTPServer:    cfg.HTTPServer,
+		Auth:          cfg.Auth,
+		DB:            cfg.DB,
+		Redis:         cfg.Redis,
+		Refresh:       cfg.Refresh,
+		Minio:         cfg.Minio,
+		FS:            cfg.FS,
+		AnalyseClient: cfg.AnalyseClient,
 	}
 }

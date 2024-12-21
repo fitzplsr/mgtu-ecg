@@ -1,11 +1,77 @@
 basePath: /
 definitions:
+  model.AnalyseRequest:
+    properties:
+      file_id:
+        type: integer
+      name:
+        type: string
+      patient_id:
+        type: integer
+    type: object
+  model.AnalyseResult:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - Unspecified
+    - "True"
+    - "False"
+  model.AnalyseStatus:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - Created
+    - Success
+    - Failed
+  model.AnalyseTask:
+    properties:
+      created_at:
+        type: string
+      file_id:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      patient_id:
+        type: integer
+      predict:
+        type: string
+      result:
+        $ref: '#/definitions/model.AnalyseResult'
+      status:
+        $ref: '#/definitions/model.AnalyseStatus'
+      updated_at:
+        type: string
+    type: object
+  model.AnalyseTasks:
+    properties:
+      analyses:
+        items:
+          $ref: '#/definitions/model.AnalyseTask'
+        type: array
+    type: object
   model.AuthResponse:
     properties:
       access_token:
         type: string
       user:
         $ref: '#/definitions/model.User'
+    type: object
+  model.CreatePatient:
+    properties:
+      birthday:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
     type: object
   model.ErrorResponse:
     properties:
@@ -24,10 +90,69 @@ definitions:
         type: string
       id:
         type: integer
+      patient_id:
+        type: integer
       size:
         type: integer
       updated_at:
         type: string
+    type: object
+  model.Filter:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      search:
+        type: string
+    type: object
+  model.GetPatient:
+    properties:
+      id:
+        type: integer
+    type: object
+  model.ListPatientAnalysesRequest:
+    properties:
+      filter:
+        $ref: '#/definitions/model.Filter'
+      patient_id:
+        type: integer
+    type: object
+  model.ListPatientFilesRequest:
+    properties:
+      filter:
+        $ref: '#/definitions/model.Filter'
+      patient_id:
+        type: integer
+    type: object
+  model.Patient:
+    properties:
+      birhday:
+        type: string
+      created_at:
+        type: string
+      int:
+        type: integer
+      name:
+        type: string
+      surname:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.PatientFiles:
+    properties:
+      files:
+        items:
+          $ref: '#/definitions/model.FileInfo'
+        type: array
+    type: object
+  model.Patients:
+    properties:
+      patients:
+        items:
+          $ref: '#/definitions/model.Patient'
+        type: array
     type: object
   model.Role:
     enum:
@@ -97,7 +222,7 @@ definitions:
       updated_at:
         type: string
     type: object
-host: localhost:3000
+host: localhost:4000
 info:
   contact:
     email: fiber@swagger.io
@@ -110,12 +235,101 @@ info:
   title: Fiber Example API
   version: "1.0"
 paths:
+  /api/v1/analyse/list_edf:
+    put:
+      consumes:
+      - application/json
+      description: List files associated with the current patient
+      parameters:
+      - description: patient info
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListPatientFilesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PatientFiles'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List patient files
+      tags:
+      - analyse
+  /api/v1/analyse/patient/list:
+    put:
+      consumes:
+      - application/json
+      description: List analyses for patient by id
+      parameters:
+      - description: New role details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListPatientAnalysesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AnalyseTasks'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List patient analyses
+      tags:
+      - analyse
+  /api/v1/analyse/run:
+    post:
+      consumes:
+      - application/json
+      description: Analyse file by it id
+      parameters:
+      - description: New role details
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.AnalyseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AnalyseTask'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Analyse file
+      tags:
+      - analyse
   /api/v1/analyse/upload:
     post:
       consumes:
       - multipart/form-data
       description: Upload a file associated with the current user
       parameters:
+      - description: Patient ID
+        in: formData
+        name: patient_id
+        required: true
+        type: string
       - description: File to upload
         in: formData
         name: file
@@ -273,6 +487,102 @@ paths:
       summary: Update Role
       tags:
       - auth
+  /api/v1/patients/:
+    put:
+      consumes:
+      - application/json
+      description: Get patient by id
+      parameters:
+      - description: patient params
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.GetPatient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Patient'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get
+      tags:
+      - patients
+  /api/v1/patients/create:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new patient
+      parameters:
+      - description: Patient creation details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatePatient'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Patient'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new patient
+      tags:
+      - patients
+  /api/v1/patients/list:
+    put:
+      consumes:
+      - application/json
+      description: List patients
+      parameters:
+      - description: filter list
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Patients'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List patients
+      tags:
+      - patients
 securityDefinitions:
   BearerAuth:
     in: header

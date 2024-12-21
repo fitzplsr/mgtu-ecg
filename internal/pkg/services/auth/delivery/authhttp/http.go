@@ -60,7 +60,6 @@ func (h *Auth) SignUp(c *fiber.Ctx) error {
 	log := h.logger.With(
 		zap.String(consts.RequestID, c.Get(consts.RequestID)), // or c.Context().ID()
 	)
-	log.Debug("start")
 	var payload model.SignUpPayload
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -99,7 +98,6 @@ func (h *Auth) SignIn(c *fiber.Ctx) error {
 	log := h.logger.With(
 		zap.String(consts.RequestID, c.Get(consts.RequestID)), // or c.Context().ID()
 	)
-	log.Debug("start")
 	var payload model.SignInPayload
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -149,7 +147,6 @@ func (h *Auth) UpdatePassword(c *fiber.Ctx) error {
 	log := h.logger.With(
 		zap.String(consts.RequestID, c.Get(consts.RequestID)), // or c.Context().ID()
 	)
-	log.Debug("start")
 	userID, ok := c.Locals(middleware.UserIDKey).(uuid.UUID)
 	if !ok {
 		log.Error("user id from locals")
@@ -200,7 +197,6 @@ func (h *Auth) UpdateRole(c *fiber.Ctx) error {
 	log := h.logger.With(
 		zap.String(consts.RequestID, c.Get(consts.RequestID)), // or c.Context().ID()
 	)
-	log.Debug("start")
 
 	userID, ok := c.Locals(middleware.UserIDKey).(uuid.UUID)
 	if !ok {

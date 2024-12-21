@@ -39,10 +39,7 @@ func New(p Params) (*Profile, error) {
 	}, nil
 }
 
-// TODO таймаут в UserContext
 func (h *Profile) Update(c *fiber.Ctx) error {
-	h.logger.Debug("start")
-
 	userID, ok := c.Locals(middleware.UserIDKey).(uuid.UUID)
 	if !ok {
 		h.logger.Error("user id from locals")
@@ -61,7 +58,7 @@ func (h *Profile) Update(c *fiber.Ctx) error {
 	}
 
 	payload.ID = userID
-	updatedUser, err := h.uc.Update(c.UserContext(), &payload)
+	updatedUser, err := h.uc.Update(c.Context(), &payload)
 	if err != nil {
 		return utils.Send500(c, messages.InternalServerError)
 	}

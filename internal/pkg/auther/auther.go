@@ -76,14 +76,12 @@ func parseClaims(token *jwt.Token) (*model.UserClaims, error) {
 
 func (a *Auther) GenerateJWT(session *model.Session) (string, error) {
 	//token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-	//	UserID:   session.UserId,
+	//	PatientID:   session.UserId,
 	//	UserRole: session.UserRole,
 	//	UserIP:   session.Ip,
 	//	Exp:      time.Now().Add(a.cfg.AccessExpirationTime).Unix(),
 	//})
 	exp := time.Now().Add(a.cfg.AccessExpirationTime)
-	a.log.Debug("expiration", zap.Time("exp", exp))
-	a.log.Debug("cfg", zap.Duration("cdf", a.cfg.AccessExpirationTime))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &authClaims{
 		UserID:   session.UserId,
 		UserRole: session.UserRole,

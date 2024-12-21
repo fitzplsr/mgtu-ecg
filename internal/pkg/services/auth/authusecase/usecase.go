@@ -166,7 +166,6 @@ func (a *Auth) makeResponse(
 
 func (a *Auth) createSession(ctx context.Context, user *model.User) (*model.Session, error) {
 	refreshToken, err := refresh.GenerateRefreshToken()
-	a.log.Debug("refresh", zap.Any("refresh token", refreshToken))
 	if err != nil {
 		return nil, err
 	}

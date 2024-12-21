@@ -17,9 +17,9 @@ INSERT INTO filemetas (format,
                        filename,
                        content_type,
                        key,
-                       user_id)
+                       patient_id)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, format, size, filename, content_type, key, user_id, created_at, updated_at
+RETURNING id, format, size, filename, content_type, key, patient_id, created_at, updated_at
 `
 
 type CreateFileMetaParams struct {
@@ -28,7 +28,7 @@ type CreateFileMetaParams struct {
 	Filename    string
 	ContentType string
 	Key         string
-	UserID      pgtype.UUID
+	PatientID   pgtype.Int4
 }
 
 func (q *Queries) CreateFileMeta(ctx context.Context, arg CreateFileMetaParams) (Filemeta, error) {
@@ -38,7 +38,7 @@ func (q *Queries) CreateFileMeta(ctx context.Context, arg CreateFileMetaParams) 
 		arg.Filename,
 		arg.ContentType,
 		arg.Key,
-		arg.UserID,
+		arg.PatientID,
 	)
 	var i Filemeta
 	err := row.Scan(
@@ -48,7 +48,7 @@ func (q *Queries) CreateFileMeta(ctx context.Context, arg CreateFileMetaParams) 
 		&i.Filename,
 		&i.ContentType,
 		&i.Key,
-		&i.UserID,
+		&i.PatientID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -67,7 +67,7 @@ func (q *Queries) DeleteFileMeta(ctx context.Context, id int32) error {
 }
 
 const getFileMetaById = `-- name: GetFileMetaById :one
-SELECT id, format, size, filename, content_type, key, user_id, created_at, updated_at
+SELECT id, format, size, filename, content_type, key, patient_id, created_at, updated_at
 FROM filemetas
 WHERE id = $1
 LIMIT 1
@@ -83,29 +83,29 @@ func (q *Queries) GetFileMetaById(ctx context.Context, id int32) (Filemeta, erro
 		&i.Filename,
 		&i.ContentType,
 		&i.Key,
-		&i.UserID,
+		&i.PatientID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
 }
 
-const getUserFileMetas = `-- name: GetUserFileMetas :many
-SELECT id, format, size, filename, content_type, key, user_id, created_at, updated_at
+const getPatientFileMetas = `-- name: GetPatientFileMetas :many
+SELECT id, format, size, filename, content_type, key, patient_id, created_at, updated_at
 FROM filemetas
-WHERE user_id = $1
-ORDER BY id
+WHERE patient_id = $1
+ORDER BY created_at
 LIMIT $2 OFFSET $3
 `
 
-type GetUserFileMetasParams struct {
-	UserID pgtype.UUID
-	Limit  int32
-	Offset int32
+type GetPatientFileMetasParams struct {
+	PatientID pgtype.Int4
+	Limit     int32
+	Offset    int32
 }
 
-func (q *Queries) GetUserFileMetas(ctx context.Context, arg GetUserFileMetasParams) ([]Filemeta, error) {
-	rows, err := q.db.Query(ctx, getUserFileMetas, arg.UserID, arg.Limit, arg.Offset)
+func (q *Queries) GetPatientFileMetas(ctx context.Context, arg GetPatientFileMetasParams) ([]Filemeta, error) {
+	rows, err := q.db.Query(ctx, getPatientFileMetas, arg.PatientID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (q *Queries) GetUserFileMetas(ctx context.Context, arg GetUserFileMetasPara
 			&i.Filename,
 			&i.ContentType,
 			&i.Key,
-			&i.UserID,
+			&i.PatientID,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {

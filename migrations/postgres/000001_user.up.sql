@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS moddatetime;
+
 -- user
 CREATE TABLE IF NOT EXISTS users
 (

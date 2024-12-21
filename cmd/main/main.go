@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/analyser"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/auther"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/config"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/db"
-	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage/miniostorage"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage/fsstorage"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/metrics"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/pprof"
@@ -17,6 +18,10 @@ import (
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth/authusecase"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth/delivery/authhttp"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/patients"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/patients/delivery/patienthttp"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/patients/patientsusecase"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/patients/repo/postgrespatients"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile/delivery/profilehttp"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile/profileusecase"
@@ -51,7 +56,7 @@ func main() {
 			db.NewPostgresConn,
 			db.NewPostgresPool,
 			db.NewRedisClient,
-			db.NewMinioClient,
+			//db.NewMinioClient,
 
 			// validator
 			validate.New,
@@ -66,8 +71,13 @@ func main() {
 				fx.As(new(middleware.SessionStorage)),
 			),
 
+			// filestorage
 			// minio
-			fx.Annotate(miniostorage.New,
+			//fx.Annotate(miniostorage.New,
+			//	fx.As(new(analyse.FileStorage)),
+			//),
+			// fs
+			fx.Annotate(fsstorage.New,
 				fx.As(new(analyse.FileStorage)),
 			),
 
@@ -100,6 +110,19 @@ func main() {
 			),
 			fx.Annotate(analysepostgres.New,
 				fx.As(new(analyse.Repo)),
+			),
+
+			fx.Annotate(analyser.New,
+				fx.As(new(analyse.Analyser)),
+			),
+
+			// patients service
+			patienthttp.New,
+			fx.Annotate(patientsusecase.New,
+				fx.As(new(patients.Usecase)),
+			),
+			fx.Annotate(postgrespatients.New,
+				fx.As(new(patients.Repo)),
 			),
 		),
 		fx.WithLogger(func(l *zap.Logger) fxevent.Logger {

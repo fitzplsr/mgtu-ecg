@@ -42,7 +42,7 @@ func (m *MinioStorage) Save(ctx context.Context, file *filestorage.File) (string
 		ctx,
 		string(filestorage.EDFBucket),
 		key,
-		&file.Data,
+		file.Data,
 		file.Size,
 		minio.PutObjectOptions{ContentType: file.ContentType},
 	)

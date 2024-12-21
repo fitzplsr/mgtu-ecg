@@ -27,7 +27,7 @@ func customJSONUnmarshal(data []byte, v any) error {
 // @contact.email fiber@swagger.io
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:3000
+// @host localhost:4000
 // @BasePath /
 // @securityDefinitions.apikey BearerAuth
 // @in header
@@ -47,7 +47,7 @@ func NewFiberApp(p AppParams) (*fiber.App, error) {
 		StackTraceHandler: nil,
 	}))
 
-	app.Use(p.CORSMW.MW)
+	//app.Use(p.CORSMW.MW)
 
 	api := app.Group("api")
 	v1 := api.Group("/v1")
@@ -73,12 +73,21 @@ func NewFiberApp(p AppParams) (*fiber.App, error) {
 	analyse.Use(p.ProtectedMW.MW)
 	{
 		analyse.Post("upload", p.AnalyseHandler.UploadFile)
+		analyse.Post("run", p.AnalyseHandler.RunAnalyse)
+		analyse.Put("list_edf", p.AnalyseHandler.ListPatientFiles)
+		analyse.Put("patient/list", p.AnalyseHandler.ListPatientAnalyses)
+	}
+
+	patients := v1.Group("patients")
+	patients.Use(p.ProtectedMW.MW)
+	{
+		patients.Post("create", p.PatientsHandler.Create)
+		patients.Put("list", p.PatientsHandler.List)
+		patients.Put("", p.PatientsHandler.Get)
 	}
 
 	v1.Get("/swagger/*", swagger.HandlerDefault) // default
 	//v1.Get("/swagger/*", p.ProtectedMW.MW, swagger.HandlerDefault) // default
-
-	p.Logger.Info("start server")
 
 	return app, nil
 }

@@ -5,7 +5,7 @@ httpServer:
   readHeaderTimeout: 10s
   bodyLimit: 50
 authJwt:
-  accessExpirationTime: 10s
+  accessExpirationTime: 10h
 refresh:
   refreshExpirationTime: 24h
 db:
@@ -15,3 +15,7 @@ minio:
 logger:
 #  logFilePath:
   environment: local
+analyse-client:
+  base_url: "http://0.0.0.0:3000/process"
+  timeout: 2m
+  input_dir: "/inputs"

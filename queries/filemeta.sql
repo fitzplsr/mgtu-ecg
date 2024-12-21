@@ -4,7 +4,7 @@ INSERT INTO filemetas (format,
                        filename,
                        content_type,
                        key,
-                       user_id)
+                       patient_id)
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 
@@ -14,11 +14,11 @@ FROM filemetas
 WHERE id = $1
 LIMIT 1;
 
--- name: GetUserFileMetas :many
+-- name: GetPatientFileMetas :many
 SELECT *
 FROM filemetas
-WHERE user_id = $1
-ORDER BY id
+WHERE patient_id = $1
+ORDER BY created_at
 LIMIT $2 OFFSET $3;
 
 -- name: DeleteFileMeta :exec

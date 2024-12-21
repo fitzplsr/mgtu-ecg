@@ -8,6 +8,18 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type AnalyseTask struct {
+	ID         int32
+	Name       string
+	PatientID  pgtype.Int4
+	FilemetaID pgtype.Int4
+	Status     int16
+	Result     int16
+	Predict    pgtype.Text
+	CreatedAt  pgtype.Timestamptz
+	UpdatedAt  pgtype.Timestamptz
+}
+
 type Filemeta struct {
 	ID          int32
 	Format      int16
@@ -15,9 +27,18 @@ type Filemeta struct {
 	Filename    string
 	ContentType string
 	Key         string
-	UserID      pgtype.UUID
+	PatientID   pgtype.Int4
 	CreatedAt   pgtype.Timestamptz
 	UpdatedAt   pgtype.Timestamptz
+}
+
+type Patient struct {
+	ID        int32
+	Name      string
+	Surname   string
+	Bdate     pgtype.Date
+	CreatedAt pgtype.Timestamptz
+	UpdatedAt pgtype.Timestamptz
 }
 
 type User struct {

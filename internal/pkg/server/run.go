@@ -10,7 +10,7 @@ func RunFiberServer(lc fx.Lifecycle, p ServerParams) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				if err := p.App.Listen(":3000"); err != nil {
+				if err := p.App.Listen(":4000"); err != nil {
 					panic(err) // Handle errors appropriately in production code
 				}
 			}()
