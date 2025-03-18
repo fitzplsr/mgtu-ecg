@@ -221,26 +221,5 @@ tasks:
     dir: '{{.USER_WORKING_DIR}}'
     cmd: 'docker compose -f "local-docker-compose.yaml" up -d'
 
-  detect-platform:
-    desc: "Определяет текущую ОС и архитектуру, подставляет переменную для docker-compose"
-    cmds:
-      - |
-        case "$(uname -s)" in
-          Linux*)  OS=linux ;;
-          Darwin*) OS=darwin ;;
-          CYGWIN*|MINGW32*|MSYS*|MINGW*) OS=windows ;;
-          *) echo "Unsupported OS"; exit 1 ;;
-        esac
-        
-        case "$(uname -m)" in
-          x86_64)  ARCH=amd64 ;;
-          arm64)   ARCH=arm64 ;;
-          aarch64) ARCH=arm64 ;;
-          *) echo "Unsupported architecture"; exit 1 ;;
-        esac
-        
-        echo "Detected OS: $OS, ARCH: $ARCH"
-        echo "PLATFORM=${OS}/${ARCH}" > .env.platform
   run:
-    deps: [ detect-platform ]
     cmd: 'docker compose -f "docker-compose.yaml" up'
