@@ -2,13 +2,14 @@ package fsstorage
 
 import (
 	"context"
+	"os"
+	"path/filepath"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
 	"github.com/fitzplsr/mgtu-ecg/pkg/filemanager"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"os"
-	"path/filepath"
 )
 
 var _ analyse.FileStorage = &FSStorage{}

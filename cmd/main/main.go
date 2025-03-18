@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/analyser"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/auther"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/config"
@@ -33,9 +37,6 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 // TODO services to module?

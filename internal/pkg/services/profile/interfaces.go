@@ -2,6 +2,7 @@ package profile
 
 import (
 	"context"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 )
 

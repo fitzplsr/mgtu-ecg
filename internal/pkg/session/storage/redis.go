@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/session"

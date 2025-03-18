@@ -2,9 +2,10 @@ package analyse
 
 import (
 	"context"
+	"mime/multipart"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage"
-	"mime/multipart"
 )
 
 type Usecase interface {

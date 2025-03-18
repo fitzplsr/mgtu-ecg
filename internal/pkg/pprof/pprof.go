@@ -1,9 +1,10 @@
 package pprof
 
 import (
+	_ "net/http/pprof"
+
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	_ "net/http/pprof"
 )
 
 func StartPprof(lc fx.Lifecycle, logger *zap.Logger) {

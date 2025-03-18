@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/google/uuid"
 )

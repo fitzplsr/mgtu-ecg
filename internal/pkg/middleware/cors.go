@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type CORS struct {

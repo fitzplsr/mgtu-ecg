@@ -2,8 +2,9 @@ package server
 
 import (
 	"context"
-	"go.uber.org/fx"
 	"time"
+
+	"go.uber.org/fx"
 )
 
 func RunFiberServer(lc fx.Lifecycle, p ServerParams) {

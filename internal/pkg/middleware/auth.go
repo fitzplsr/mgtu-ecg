@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"errors"
+	"time"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/refresh"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/session"
@@ -13,7 +15,6 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
-	"time"
 )
 
 type SessionStorage interface {

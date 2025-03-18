@@ -3,9 +3,10 @@ package db
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/fx"
-	"time"
 )
 
 type RedisParams struct {

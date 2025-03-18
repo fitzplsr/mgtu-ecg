@@ -2,6 +2,7 @@ package authhttp
 
 import (
 	"errors"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/refresh"

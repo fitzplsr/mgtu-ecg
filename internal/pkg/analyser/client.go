@@ -5,15 +5,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"path/filepath"
+	"time"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
 	"github.com/mailru/easyjson"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"io"
-	"net/http"
-	"path/filepath"
-	"time"
 )
 
 var _ analyse.Analyser = &HTTPClient{}

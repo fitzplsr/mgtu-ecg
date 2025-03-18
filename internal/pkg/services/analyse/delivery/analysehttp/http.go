@@ -2,6 +2,8 @@ package analysehttp
 
 import (
 	"errors"
+	"strconv"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
@@ -13,7 +15,6 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 type Params struct {

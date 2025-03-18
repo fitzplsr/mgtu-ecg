@@ -4,11 +4,12 @@ package model
 
 import (
 	json "encoding/json"
+	time "time"
+
 	messages "github.com/fitzplsr/mgtu-ecg/pkg/messages"
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
-	time "time"
 )
 
 // suppress unused package warning

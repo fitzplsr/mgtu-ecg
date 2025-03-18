@@ -1,9 +1,10 @@
 package pghelper
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
-	"time"
 )
 
 func ToPGUUID(uuid uuid.UUID) pgtype.UUID {

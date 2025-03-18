@@ -2,6 +2,7 @@ package profileusecase
 
 import (
 	"context"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/profile"
 	"go.uber.org/fx"

@@ -5,13 +5,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"mime/multipart"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/patients"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"mime/multipart"
 )
 
 var _ analyse.Usecase = (*Analyse)(nil)

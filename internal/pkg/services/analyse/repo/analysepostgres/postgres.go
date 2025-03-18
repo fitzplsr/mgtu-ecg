@@ -2,6 +2,7 @@ package analysepostgres
 
 import (
 	"context"
+
 	models "github.com/fitzplsr/mgtu-ecg/gen"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"

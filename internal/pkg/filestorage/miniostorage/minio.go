@@ -2,6 +2,7 @@ package miniostorage
 
 import (
 	"context"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
 	"github.com/fitzplsr/mgtu-ecg/pkg/filemanager"

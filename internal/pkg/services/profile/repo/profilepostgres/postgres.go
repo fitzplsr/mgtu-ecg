@@ -3,6 +3,8 @@ package profilepostgres
 import (
 	"context"
 	"errors"
+	"time"
+
 	models "github.com/fitzplsr/mgtu-ecg/gen"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth"
@@ -16,7 +18,6 @@ import (
 	"github.com/samber/lo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"time"
 )
 
 var _ auth.Repo = (*Profile)(nil)

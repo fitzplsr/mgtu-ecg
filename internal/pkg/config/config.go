@@ -1,6 +1,9 @@
 package config
 
 import (
+	"log"
+	"os"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/analyser"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/auther"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/db"
@@ -11,8 +14,6 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/joho/godotenv/autoload"
 	"go.uber.org/fx"
-	"log"
-	"os"
 )
 
 type Config struct {

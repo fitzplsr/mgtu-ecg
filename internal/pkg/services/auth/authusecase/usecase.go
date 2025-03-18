@@ -3,6 +3,8 @@ package authusecase
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/refresh"
@@ -12,7 +14,6 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"time"
 )
 
 var _ auth.Usecase = (*Auth)(nil)
