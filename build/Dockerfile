@@ -1,4 +1,4 @@
-FROM golang:1.24.0-alpine as builder
+FROM --platform=$BUILDPLATFORM golang:1.24.0-alpine as builder
 
 COPY . /github.com/fitzplsr/mgtu-ecg/
 WORKDIR /github.com/fitzplsr/mgtu-ecg/
