@@ -119,7 +119,7 @@ func (a *Analyse) ListPatientFiles(c *fiber.Ctx) error {
 		return utils.Send500(c, messages.InternalServerError)
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(files)
+	return c.Status(fiber.StatusOK).JSON(files)
 }
 
 // @Summary Analyse file

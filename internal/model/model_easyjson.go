@@ -864,8 +864,10 @@ func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel9(in *jlexer.Lex
 			out.Name = string(in.String())
 		case "surname":
 			out.Surname = string(in.String())
-		case "birhday":
-			out.Birhday = string(in.String())
+		case "birthday":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.Birthday).UnmarshalJSON(data))
+			}
 		case "created_at":
 			if data := in.Raw(); in.Ok() {
 				in.AddError((out.CreatedAt).UnmarshalJSON(data))
@@ -904,9 +906,9 @@ func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel9(out *jwriter.W
 		out.String(string(in.Surname))
 	}
 	{
-		const prefix string = ",\"birhday\":"
+		const prefix string = ",\"birthday\":"
 		out.RawString(prefix)
-		out.String(string(in.Birhday))
+		out.Raw((in.Birthday).MarshalJSON())
 	}
 	{
 		const prefix string = ",\"created_at\":"

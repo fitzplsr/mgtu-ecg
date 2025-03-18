@@ -204,7 +204,7 @@ tasks:
     cmd: '{{ .EASYJSON }} -pkg internal/model'
 
 
-  ## bambam tasks
+  ## run tasks
 
   analyse-run:
     vars:
@@ -220,3 +220,6 @@ tasks:
   compose-local:
     dir: '{{.USER_WORKING_DIR}}'
     cmd: 'docker compose -f "local-docker-compose.yaml" up -d'
+
+  run:
+    cmd: 'docker compose -f "docker-compose.yaml" up'

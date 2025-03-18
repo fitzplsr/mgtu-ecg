@@ -127,7 +127,7 @@ definitions:
     type: object
   model.Patient:
     properties:
-      birhday:
+      birthday:
         type: string
       created_at:
         type: string
@@ -227,12 +227,12 @@ info:
   contact:
     email: fiber@swagger.io
     name: API Support
-  description: This is a sample swagger for Fiber
+  description: API
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Fiber Example API
+  title: API
   version: "1.0"
 paths:
   /api/v1/analyse/list_edf:

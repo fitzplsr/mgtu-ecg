@@ -767,7 +767,7 @@ const docTemplate = `{
         "model.Patient": {
             "type": "object",
             "properties": {
-                "birhday": {
+                "birthday": {
                     "type": "string"
                 },
                 "created_at": {
@@ -921,8 +921,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:4000",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Fiber Example API",
-	Description:      "This is a sample swagger for Fiber",
+	Title:            "API",
+	Description:      "API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -11,7 +11,7 @@ type Patient struct {
 	ID        int       `json:"int"`
 	Name      string    `json:"name"`
 	Surname   string    `json:"surname"`
-	Birhday   string    `json:"birhday"`
+	Birthday  time.Time `json:"birthday"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

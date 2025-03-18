@@ -10,7 +10,7 @@ func convertPatientToModel(patientDB *models.Patient) *model.Patient {
 		ID:        int(patientDB.ID),
 		Name:      patientDB.Name,
 		Surname:   patientDB.Surname,
-		Birhday:   patientDB.Bdate.Time.Format(model.BirthdayFormat),
+		Birthday:  patientDB.Bdate.Time,
 		CreatedAt: patientDB.CreatedAt.Time,
 		UpdatedAt: patientDB.UpdatedAt.Time,
 	}

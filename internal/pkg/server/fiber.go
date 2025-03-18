@@ -19,9 +19,9 @@ func customJSONUnmarshal(data []byte, v any) error {
 	return easyjson.Unmarshal(data, v.(easyjson.Unmarshaler))
 }
 
-// @title Fiber Example API
+// @title API
 // @version 1.0
-// @description This is a sample swagger for Fiber
+// @description API
 // @termsOfService http://swagger.io/terms/
 // @contact.name API Support
 // @contact.email fiber@swagger.io
@@ -47,7 +47,7 @@ func NewFiberApp(p AppParams) (*fiber.App, error) {
 		StackTraceHandler: nil,
 	}))
 
-	//app.Use(p.CORSMW.MW)
+	app.Use(p.CORSMW.MW)
 
 	api := app.Group("api")
 	v1 := api.Group("/v1")
