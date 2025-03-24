@@ -1,23 +1,7 @@
 version: "3.9"
 
 services:
-  backend:
-    platform: linux/amd64
-    image: fitzplsr/mgtu-ecg:latest
-    container_name: backend
-    restart: always
-    ports:
-      - '4000:4000'
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - ./.env
-    networks:
-      - main-network
-
-
-  db:
+  postgres:
     container_name: postgres
     image: postgres
     restart: always
@@ -95,6 +79,20 @@ services:
 #    command: server /data
 #    env_file:
 #      - ./.env
+  backend:
+    platform: linux/amd64
+    image: fitzplsr/mgtu-ecg:latest
+    container_name: backend
+    restart: always
+    ports:
+      - '4000:4000'
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.env
+    networks:
+      - main-network
 
 networks:
   main-network:

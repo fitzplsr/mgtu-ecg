@@ -37,8 +37,6 @@ func New(p Params) (*Patients, error) {
 	}, nil
 }
 
-// TODO таймаут в UserContext
-
 // @Summary     Create a new patient
 // @Description Creates a new patient
 // @Security BearerAuth
@@ -131,7 +129,7 @@ func (p *Patients) Get(c *fiber.Ctx) error {
 
 	patientsList, err := p.uc.Get(c.Context(), &payload)
 	if err != nil {
-		log.Error("error list patients", zap.Error(err))
+		log.Error("failed to list patients", zap.Error(err))
 		return utils.Send500(c, messages.InternalServerError)
 	}
 
