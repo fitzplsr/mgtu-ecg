@@ -4,10 +4,10 @@ httpServer:
   idleTimeout: 30s
   readHeaderTimeout: 10s
   bodyLimit: 50
-authJwt:
+authJWT:
   accessExpirationTime: 10h
 refresh:
-  refreshExpirationTime: 24h
+  refreshExpirationTime: 780h
 db:
   connectTimeout: 5m
 minio:
