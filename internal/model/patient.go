@@ -8,7 +8,7 @@ const BirthdayFormat = "1990-05-15"
 
 //easyjson:json
 type Patient struct {
-	ID        int       `json:"int"`
+	ID        int       `json:"id"`
 	Name      string    `json:"name"`
 	Surname   string    `json:"surname"`
 	Birthday  time.Time `json:"birthday"`

@@ -773,7 +773,7 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "int": {
+                "id": {
                     "type": "integer"
                 },
                 "name": {
