@@ -4,12 +4,11 @@ package model
 
 import (
 	json "encoding/json"
-	time "time"
-
 	messages "github.com/fitzplsr/mgtu-ecg/pkg/messages"
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
+	time "time"
 )
 
 // suppress unused package warning
@@ -859,7 +858,7 @@ func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel9(in *jlexer.Lex
 			continue
 		}
 		switch key {
-		case "int":
+		case "id":
 			out.ID = int(in.Int())
 		case "name":
 			out.Name = string(in.String())
@@ -892,7 +891,7 @@ func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel9(out *jwriter.W
 	first := true
 	_ = first
 	{
-		const prefix string = ",\"int\":"
+		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
 		out.Int(int(in.ID))
 	}
