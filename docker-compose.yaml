@@ -80,9 +80,12 @@ services:
 #    env_file:
 #      - ./.env
   backend:
-    platform: linux/amd64
-    image: fitzplsr/mgtu-ecg:latest
+#    platform: linux/amd64
+#    image: fitzplsr/mgtu-ecg:latest
     container_name: backend
+    build:
+      context: .
+      dockerfile: ./build/Dockerfile
     restart: always
     ports:
       - '4000:4000'
