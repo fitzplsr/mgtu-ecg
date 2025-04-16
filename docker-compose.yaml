@@ -87,6 +87,8 @@ services:
       context: .
       dockerfile: ./build/Dockerfile
     restart: always
+    volumes:
+      - "./files:/docker-main/files"
     ports:
       - '4000:4000'
     depends_on:
