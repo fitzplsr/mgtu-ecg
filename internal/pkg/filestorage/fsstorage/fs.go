@@ -2,6 +2,7 @@ package fsstorage
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -44,14 +45,24 @@ func (m *FSStorage) Save(_ context.Context, file *filestorage.File) (string, err
 		return "", err
 	}
 
-	f, err := os.Create(filepath.Join(m.path, key))
-	if err != nil {
-		return "", err
+	fullPath := filepath.Join(m.path, key)
+	dir := filepath.Dir(fullPath)
+
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		m.log.Error("failed to create directories", zap.Error(err))
+		return "", fmt.Errorf("failed to create directories: %w", err)
 	}
+
+	f, err := os.Create(fullPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to create file: %w", err)
+	}
+
+	defer f.Close()
 
 	_, err = f.ReadFrom(file.Data)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to ReadFrom: %w", err)
 	}
 
 	return key, nil
