@@ -11,6 +11,10 @@ func ToPGUUID(uuid uuid.UUID) pgtype.UUID {
 	return pgtype.UUID{Bytes: uuid, Valid: true}
 }
 
+func ToPGText(s string) pgtype.Text {
+	return pgtype.Text{String: s, Valid: true}
+}
+
 func ToPGTimestamp(time time.Time) pgtype.Timestamptz {
 	return pgtype.Timestamptz{
 		Time:  time,

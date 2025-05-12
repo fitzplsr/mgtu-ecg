@@ -2,12 +2,12 @@ basePath: /
 definitions:
   model.AnalyseRequest:
     properties:
-      file_id:
-        type: integer
+      file_ids:
+        items:
+          type: integer
+        type: array
       name:
         type: string
-      patient_id:
-        type: integer
     type: object
   model.AnalyseResult:
     enum:
@@ -341,7 +341,9 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.FileInfo'
+            items:
+              $ref: '#/definitions/model.FileInfo'
+            type: array
         "500":
           description: Internal Server Error
           schema:

@@ -50,6 +50,10 @@ func New(p Params) *Analyse {
 }
 
 func (a *Analyse) Upload(ctx context.Context, fileHeader *multipart.FileHeader, patientID int) ([]*model.FileInfo, error) {
+	if patientID == 0 {
+		patientID = 1
+	}
+
 	open, err := fileHeader.Open()
 	if err != nil {
 		a.log.Error("open file", zap.Error(err))
@@ -153,18 +157,25 @@ func (a *Analyse) saveSingleFile(ctx context.Context, data []byte, filename, con
 	return []*model.FileInfo{savedMeta}, nil
 }
 
-func (a *Analyse) RunAnalyse(ctx context.Context, req *model.AnalyseRequest) (*model.AnalyseTask, error) {
-	patientInfo, err := a.patientsRepo.GetByID(ctx, req.PatientID)
-	if err != nil {
-		return nil, errors.Join(err, analyse.ErrPatientNotExist)
+func (a *Analyse) RunAnalyse(ctx context.Context, req *model.AnalyseRequest) (*model.AnalyseTasks, error) {
+	res := make([]*model.AnalyseTask, 0, len(req.FileIDs))
+	for _, fileID := range req.FileIDs {
+		singleRes, err := a.runSingleAnalyse(ctx, fileID, req.Name)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, singleRes)
 	}
+	return &model.AnalyseTasks{Analyses: res}, nil
+}
 
-	fileInfo, err := a.repo.GetFileByID(ctx, req.FileID)
+func (a *Analyse) runSingleAnalyse(ctx context.Context, fileID int, taskName string) (*model.AnalyseTask, error) {
+	fileInfo, err := a.repo.GetFileByID(ctx, fileID)
 	if err != nil {
 		return nil, errors.Join(err, analyse.ErrFileNotExist)
 	}
 
-	res, err := a.repo.CreateAnalyse(ctx, req.Name, int(fileInfo.ID), patientInfo.ID, model.Created)
+	res, err := a.repo.CreateAnalyse(ctx, taskName, int(fileInfo.ID), fileInfo.PatientID, model.Created)
 	if err != nil {
 		a.log.Error("failed to create analyse", zap.Error(err))
 		return nil, fmt.Errorf("create analyse task: %w", err)

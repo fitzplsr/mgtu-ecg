@@ -3,6 +3,7 @@ package postgrespatients
 import (
 	"context"
 	"fmt"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/utils/pghelper"
 
 	models "github.com/fitzplsr/mgtu-ecg/gen"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
@@ -39,7 +40,7 @@ func New(p PostgresParams) *Patients {
 func (p *Patients) Create(ctx context.Context, patient *model.CreatePatient) (*model.Patient, error) {
 	res, err := p.db.CreatePatient(ctx, models.CreatePatientParams{
 		Name:    patient.Name,
-		Surname: patient.Surname,
+		Surname: pghelper.ToPGText(patient.Surname),
 		Bdate: pgtype.Date{
 			Time:             patient.Birthday,
 			InfinityModifier: 0,

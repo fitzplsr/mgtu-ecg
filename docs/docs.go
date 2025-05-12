@@ -196,7 +196,10 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.FileInfo"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.FileInfo"
+                            }
                         }
                     },
                     "500": {
@@ -578,14 +581,14 @@ const docTemplate = `{
         "model.AnalyseRequest": {
             "type": "object",
             "properties": {
-                "file_id": {
-                    "type": "integer"
+                "file_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
                 "name": {
                     "type": "string"
-                },
-                "patient_id": {
-                    "type": "integer"
                 }
             }
         },

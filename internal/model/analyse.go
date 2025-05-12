@@ -22,9 +22,8 @@ type AnalyseTasks struct {
 
 //easyjson:json
 type AnalyseRequest struct {
-	Name      string `json:"name"`
-	FileID    int    `json:"file_id"`
-	PatientID int    `json:"patient_id"`
+	Name    string `json:"name"`
+	FileIDs []int  `json:"file_ids"`
 }
 
 //easyjson:json

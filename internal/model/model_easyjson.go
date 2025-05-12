@@ -2064,10 +2064,29 @@ func easyjsonC80ae7adDecodeGithubComFitzplsrMgtuEcgInternalModel23(in *jlexer.Le
 		switch key {
 		case "name":
 			out.Name = string(in.String())
-		case "file_id":
-			out.FileID = int(in.Int())
-		case "patient_id":
-			out.PatientID = int(in.Int())
+		case "file_ids":
+			if in.IsNull() {
+				in.Skip()
+				out.FileIDs = nil
+			} else {
+				in.Delim('[')
+				if out.FileIDs == nil {
+					if !in.IsDelim(']') {
+						out.FileIDs = make([]int, 0, 8)
+					} else {
+						out.FileIDs = []int{}
+					}
+				} else {
+					out.FileIDs = (out.FileIDs)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v13 int
+					v13 = int(in.Int())
+					out.FileIDs = append(out.FileIDs, v13)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
 		default:
 			in.SkipRecursive()
 		}
@@ -2088,14 +2107,20 @@ func easyjsonC80ae7adEncodeGithubComFitzplsrMgtuEcgInternalModel23(out *jwriter.
 		out.String(string(in.Name))
 	}
 	{
-		const prefix string = ",\"file_id\":"
+		const prefix string = ",\"file_ids\":"
 		out.RawString(prefix)
-		out.Int(int(in.FileID))
-	}
-	{
-		const prefix string = ",\"patient_id\":"
-		out.RawString(prefix)
-		out.Int(int(in.PatientID))
+		if in.FileIDs == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v14, v15 := range in.FileIDs {
+				if v14 > 0 {
+					out.RawByte(',')
+				}
+				out.Int(int(v15))
+			}
+			out.RawByte(']')
+		}
 	}
 	out.RawByte('}')
 }

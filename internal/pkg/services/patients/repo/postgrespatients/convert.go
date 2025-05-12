@@ -9,7 +9,7 @@ func convertPatientToModel(patientDB *models.Patient) *model.Patient {
 	return &model.Patient{
 		ID:        int(patientDB.ID),
 		Name:      patientDB.Name,
-		Surname:   patientDB.Surname,
+		Surname:   patientDB.Surname.String,
 		Birthday:  patientDB.Bdate.Time,
 		CreatedAt: patientDB.CreatedAt.Time,
 		UpdatedAt: patientDB.UpdatedAt.Time,

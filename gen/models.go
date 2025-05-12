@@ -35,7 +35,7 @@ type Filemeta struct {
 type Patient struct {
 	ID        int32
 	Name      string
-	Surname   string
+	Surname   pgtype.Text
 	Bdate     pgtype.Date
 	CreatedAt pgtype.Timestamptz
 	UpdatedAt pgtype.Timestamptz
