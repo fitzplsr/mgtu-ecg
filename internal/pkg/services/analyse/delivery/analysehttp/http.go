@@ -52,7 +52,7 @@ func New(p Params) (*Analyse, error) {
 // @Produce application/json
 // @Param patient_id formData string true "Patient ID"
 // @Param file formData file true "File to upload"
-// @Success 201 {object} model.FileInfo
+// @Success 201 {object} model.FileInfos
 // @Failure 500 {object} model.ErrorResponse
 // @Router      /api/v1/analyse/upload [post]
 func (a *Analyse) UploadFile(c *fiber.Ctx) error {
@@ -88,7 +88,7 @@ func (a *Analyse) UploadFile(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fileInfo)
+	return c.Status(fiber.StatusCreated).JSON(model.FileInfos(fileInfo))
 }
 
 // @Summary List patient files

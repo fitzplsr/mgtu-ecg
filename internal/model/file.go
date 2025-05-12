@@ -15,6 +15,9 @@ type FileMeta struct {
 }
 
 //easyjson:json
+type FileInfos []*FileInfo
+
+//easyjson:json
 type FileInfo struct {
 	ID          int64     `json:"id"`
 	PatientID   int       `json:"patient_id"`

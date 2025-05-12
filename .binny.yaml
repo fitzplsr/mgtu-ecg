@@ -94,7 +94,7 @@ tools:
 
   - name: enumer
     version:
-      want: latest
+      want: 1.5.11
       method: go-proxy
       with:
         module: github.com/dmarkham/enumer
