@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/converter"
 	"log"
 	"os"
 
@@ -29,6 +30,7 @@ type Config struct {
 	Minio         db.MinioConfig   `yaml:"minio"`
 	FS            fsstorage.Config `yaml:"fs"`
 	AnalyseClient analyser.Config  `yaml:"analyse-client"`
+	ConvertClient converter.Config `yaml:"convert-client"`
 }
 
 type Out struct {
@@ -43,6 +45,7 @@ type Out struct {
 	Minio         db.MinioConfig
 	FS            fsstorage.Config
 	AnalyseClient analyser.Config
+	ConvertClient converter.Config
 }
 
 func MustLoad() Out {
@@ -73,5 +76,6 @@ func MustLoad() Out {
 		Minio:         cfg.Minio,
 		FS:            cfg.FS,
 		AnalyseClient: cfg.AnalyseClient,
+		ConvertClient: cfg.ConvertClient,
 	}
 }

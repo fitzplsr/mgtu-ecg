@@ -217,9 +217,12 @@ tasks:
       - |
         curl -X POST -H "Content-Type: application/json" -d '{"input_file": "/inputs/ma0844az_1-1+.edf", "output_dir": "/outputs"}' http://0.0.0.0:3000/process
 
-  compose-local:
+  local:
     dir: '{{.USER_WORKING_DIR}}'
     cmd: 'docker compose -f "local-docker-compose.yaml" up -d'
 
   run:
     cmd: 'docker compose -f "docker-compose.yaml" up'
+
+  clean:
+    docker rm -v -f $(docker ps -qa)

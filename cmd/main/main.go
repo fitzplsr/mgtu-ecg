@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/converter"
 	"os"
 	"os/signal"
 	"syscall"
@@ -115,6 +116,9 @@ func main() {
 
 			fx.Annotate(analyser.New,
 				fx.As(new(analyse.Analyser)),
+			),
+			fx.Annotate(converter.New,
+				fx.As(new(analyse.Converter)),
 			),
 
 			// patients service

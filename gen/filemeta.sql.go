@@ -17,9 +17,10 @@ INSERT INTO filemetas (format,
                        filename,
                        content_type,
                        key,
-                       patient_id)
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, format, size, filename, content_type, key, patient_id, created_at, updated_at
+                       patient_id,
+                       data)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, format, size, filename, content_type, key, data, patient_id, created_at, updated_at
 `
 
 type CreateFileMetaParams struct {
@@ -29,6 +30,7 @@ type CreateFileMetaParams struct {
 	ContentType string
 	Key         string
 	PatientID   pgtype.Int4
+	Data        []byte
 }
 
 func (q *Queries) CreateFileMeta(ctx context.Context, arg CreateFileMetaParams) (Filemeta, error) {
@@ -39,6 +41,7 @@ func (q *Queries) CreateFileMeta(ctx context.Context, arg CreateFileMetaParams) 
 		arg.ContentType,
 		arg.Key,
 		arg.PatientID,
+		arg.Data,
 	)
 	var i Filemeta
 	err := row.Scan(
@@ -48,6 +51,7 @@ func (q *Queries) CreateFileMeta(ctx context.Context, arg CreateFileMetaParams) 
 		&i.Filename,
 		&i.ContentType,
 		&i.Key,
+		&i.Data,
 		&i.PatientID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -67,7 +71,7 @@ func (q *Queries) DeleteFileMeta(ctx context.Context, id int32) error {
 }
 
 const getFileMetaById = `-- name: GetFileMetaById :one
-SELECT id, format, size, filename, content_type, key, patient_id, created_at, updated_at
+SELECT id, format, size, filename, content_type, key, data, patient_id, created_at, updated_at
 FROM filemetas
 WHERE id = $1
 LIMIT 1
@@ -83,6 +87,7 @@ func (q *Queries) GetFileMetaById(ctx context.Context, id int32) (Filemeta, erro
 		&i.Filename,
 		&i.ContentType,
 		&i.Key,
+		&i.Data,
 		&i.PatientID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -91,7 +96,7 @@ func (q *Queries) GetFileMetaById(ctx context.Context, id int32) (Filemeta, erro
 }
 
 const getPatientFileMetas = `-- name: GetPatientFileMetas :many
-SELECT id, format, size, filename, content_type, key, patient_id, created_at, updated_at
+SELECT id, format, size, filename, content_type, key, data, patient_id, created_at, updated_at
 FROM filemetas
 WHERE patient_id = $1
 ORDER BY created_at
@@ -120,6 +125,7 @@ func (q *Queries) GetPatientFileMetas(ctx context.Context, arg GetPatientFileMet
 			&i.Filename,
 			&i.ContentType,
 			&i.Key,
+			&i.Data,
 			&i.PatientID,
 			&i.CreatedAt,
 			&i.UpdatedAt,

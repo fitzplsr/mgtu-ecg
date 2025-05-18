@@ -79,6 +79,24 @@ services:
 #    command: server /data
 #    env_file:
 #      - ./.env
+
+  converter:
+    #    platform: linux/amd64
+    #    image: fitzplsr/mgtu-ecg:latest
+    container_name: converter
+    build:
+      context: ./edfconverter
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - "./files/inputs:/inputs"
+    ports:
+      - '8081:8081'
+    env_file:
+      - ./.env
+    networks:
+      - main-network
+
   backend:
 #    platform: linux/amd64
 #    image: fitzplsr/mgtu-ecg:latest
@@ -94,6 +112,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - converter
     env_file:
       - ./.env
     networks:

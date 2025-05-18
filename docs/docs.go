@@ -703,6 +703,9 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+                "data": {
+                    "type": "string"
+                },
                 "filename": {
                     "type": "string"
                 },

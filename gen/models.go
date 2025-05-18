@@ -27,6 +27,7 @@ type Filemeta struct {
 	Filename    string
 	ContentType string
 	Key         string
+	Data        []byte
 	PatientID   pgtype.Int4
 	CreatedAt   pgtype.Timestamptz
 	UpdatedAt   pgtype.Timestamptz

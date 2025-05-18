@@ -16,6 +16,7 @@ func convertFileMetaToModel(metaDB *models.Filemeta) *model.FileInfo {
 		ContentType: metaDB.ContentType,
 		CreatedAt:   metaDB.CreatedAt.Time,
 		UpdatedAt:   metaDB.UpdatedAt.Time,
+		Data:        string(metaDB.Data),
 	}
 }
 

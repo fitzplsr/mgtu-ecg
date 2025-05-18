@@ -12,6 +12,7 @@ type FileMeta struct {
 	Size        int32      `json:"size"`
 	Format      FileFormat `json:"format"`
 	ContentType string     `json:"content-type"`
+	Data        []byte     `json:"data"`
 }
 
 //easyjson:json
@@ -28,6 +29,7 @@ type FileInfo struct {
 	ContentType string    `json:"content-type"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	Data        string    `json:"data"`
 }
 
 //easyjson:json

@@ -78,6 +78,7 @@ func (a *Analyse) UploadFile(c *fiber.Ctx) error {
 	)
 	fileInfo, err := a.uc.Upload(c.Context(), file, patientID)
 	if err != nil {
+		a.log.Error("failed to upload file: %w", zap.Error(err))
 		switch {
 		case errors.Is(err, analyse.ErrFileNotExist):
 			return utils.Send404(c, messages.NotFound)

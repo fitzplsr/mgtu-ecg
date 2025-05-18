@@ -28,6 +28,7 @@ type Params struct {
 	Repo         analyse.Repo
 	PatientsRepo patients.Repo
 	Analyser     analyse.Analyser
+	Converter    analyse.Converter
 }
 
 type Analyse struct {
@@ -37,6 +38,7 @@ type Analyse struct {
 	patientsRepo patients.Repo
 	fileStorage  analyse.FileStorage
 	analyser     analyse.Analyser
+	converter    analyse.Converter
 }
 
 func New(p Params) *Analyse {
@@ -46,6 +48,7 @@ func New(p Params) *Analyse {
 		fileStorage:  p.FileStorage,
 		analyser:     p.Analyser,
 		patientsRepo: p.PatientsRepo,
+		converter:    p.Converter,
 	}
 }
 
@@ -139,6 +142,11 @@ func (a *Analyse) saveSingleFile(ctx context.Context, data []byte, filename, con
 		return nil, err
 	}
 
+	converted, err := a.converter.Convert(ctx, key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert file: %w", err)
+	}
+
 	meta := model.FileMeta{
 		PatientID:   patientID,
 		Key:         key,
@@ -146,6 +154,7 @@ func (a *Analyse) saveSingleFile(ctx context.Context, data []byte, filename, con
 		Size:        int32(len(data)),
 		Format:      model.EDF,
 		ContentType: contentType,
+		Data:        converted,
 	}
 
 	savedMeta, err := a.repo.SaveFileMeta(ctx, &meta)

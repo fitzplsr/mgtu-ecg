@@ -2,7 +2,6 @@ package analysepostgres
 
 import (
 	"context"
-
 	models "github.com/fitzplsr/mgtu-ecg/gen"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
@@ -55,6 +54,7 @@ func (a *Analyse) SaveFileMeta(ctx context.Context, meta *model.FileMeta) (*mode
 			Int32: int32(meta.PatientID),
 			Valid: true,
 		},
+		Data: meta.Data,
 	})
 	if err != nil {
 		a.log.Error("save file meta", zap.Error(err))

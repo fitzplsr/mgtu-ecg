@@ -29,6 +29,10 @@ type Analyser interface {
 	Run(ctx context.Context, filename string) (*model.InternalAnalyseResult, error)
 }
 
+type Converter interface {
+	Convert(ctx context.Context, filename string) ([]byte, error)
+}
+
 type FileStorage interface {
 	Save(ctx context.Context, file *filestorage.File) (string, error)
 }
