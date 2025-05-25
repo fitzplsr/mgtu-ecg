@@ -87,6 +87,7 @@ func (c *HTTPClient) Run(ctx context.Context, filename string) (*model.InternalA
 	if err != nil {
 		return nil, fmt.Errorf("read body: %w", err)
 	}
+	c.log.Debug("raw body", zap.String("raw body", string(b)))
 
 	var result model.InternalAnalyseResult
 	if err := easyjson.Unmarshal(b, &result); err != nil {

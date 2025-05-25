@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/metrics"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse/delivery/analysehttp"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/auth/delivery/authhttp"
@@ -32,4 +33,5 @@ type AppParams struct {
 	// middlewares
 	ProtectedMW *middleware.ProtectedMW
 	CORSMW      *middleware.CORS
+	MetrcisMW   *metrics.MetricsMW
 }

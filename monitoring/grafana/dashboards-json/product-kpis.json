@@ -1,0 +1,62 @@
+{
+  "id": null,
+  "uid": "product-kpis",
+  "title": "Product KPIs",
+  "tags": ["auto"],
+  "schemaVersion": 38,
+  "version": 2,
+  "refresh": "30s",
+  "time": { "from": "now-24h", "to": "now" },
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "ECG uploads (rate)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(mgtu_ecg_business_ecg_uploads_total[1h])",
+          "legendFormat": "uploads/h"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "barchart",
+      "title": "ECG processed (24 h)",
+      "datasource": "Prometheus",
+      "options": { "orientation": "horizontal", "stacking": "normal" },
+      "targets": [
+        {
+          "expr": "increase(mgtu_ecg_business_ecg_processed_total[24h])",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "Avg processing time (s)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(mgtu_ecg_business_ecg_processing_seconds_sum[1h]) / rate(mgtu_ecg_business_ecg_processing_seconds_count[1h])",
+          "legendFormat": "avg s"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+    },
+    {
+      "type": "graph",
+      "title": "SLA 95 % (s)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(mgtu_ecg_business_ecg_processing_seconds_bucket[1h])) by (le))",
+          "legendFormat": "P95 s"
+        }
+      ],
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
+    }
+  ]
+}

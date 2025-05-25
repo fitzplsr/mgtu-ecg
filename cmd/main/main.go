@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/converter"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/metrics"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,7 +13,6 @@ import (
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/config"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/db"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage/fsstorage"
-	"github.com/fitzplsr/mgtu-ecg/internal/pkg/metrics"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/middleware"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/pprof"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/server"
@@ -86,6 +86,7 @@ func main() {
 			// middlewares
 			middleware.NewProtectMW,
 			middleware.NewCORSMiddleware,
+			metrics.NewMetricsMW,
 
 			// auth service
 			authhttp.New,
@@ -135,9 +136,9 @@ func main() {
 		}),
 		fx.Invoke(
 			pprof.StartPprof,
-			metrics.InvokeMetricsServer,
 			server.RunFiberServer,
 			migrations.RunMigrations,
+			metrics.InvokeMetricsServer,
 		),
 	)
 

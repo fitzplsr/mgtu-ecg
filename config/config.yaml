@@ -16,10 +16,12 @@ logger:
 #  logFilePath:
   environment: local
 analyse-client:
-  base_url: "http://0.0.0.0:3000/process"
+#  base_url: "http://0.0.0.0:8082/process"
+  base_url: "http://analyser:8082/process"
   timeout: 2m
   input_dir: "/inputs"
 convert-client:
+#  base_url: "http://0.0.0.0:8081/convert"
   base_url: "http://converter:8081/convert"
   timeout: 2m
   input_dir: "/inputs"

@@ -35,3 +35,5 @@ go.work.sum
 files/
 ansible/
 .tmp/
+
+.DS_Store

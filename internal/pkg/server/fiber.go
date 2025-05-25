@@ -47,6 +47,8 @@ func NewFiberApp(p AppParams) (*fiber.App, error) {
 		StackTraceHandler: nil,
 	}))
 
+	app.Use(p.MetrcisMW.MW)
+
 	app.Use(p.CORSMW.MW)
 
 	api := app.Group("api")

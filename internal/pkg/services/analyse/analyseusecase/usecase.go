@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/fitzplsr/mgtu-ecg/internal/model"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/filestorage"
+	"github.com/fitzplsr/mgtu-ecg/internal/pkg/metrics"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/analyse"
 	"github.com/fitzplsr/mgtu-ecg/internal/pkg/services/patients"
 	"go.uber.org/fx"
@@ -16,6 +17,7 @@ import (
 	"mime/multipart"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 var _ analyse.Usecase = (*Analyse)(nil)
@@ -75,6 +77,10 @@ func (a *Analyse) Upload(ctx context.Context, fileHeader *multipart.FileHeader, 
 
 	if strings.HasSuffix(strings.ToLower(filename), ".zip") || contentType == "application/zip" {
 		return a.processZip(ctx, data, patientID)
+	}
+
+	if !strings.HasSuffix(strings.ToLower(filename), ".edf") {
+		return nil, errors.New("invalid file format")
 	}
 
 	return a.saveSingleFile(ctx, data, filename, contentType, patientID)
@@ -163,6 +169,8 @@ func (a *Analyse) saveSingleFile(ctx context.Context, data []byte, filename, con
 		return nil, err
 	}
 
+	metrics.EcgUploadsTotal.Inc()
+
 	return []*model.FileInfo{savedMeta}, nil
 }
 
@@ -190,9 +198,17 @@ func (a *Analyse) runSingleAnalyse(ctx context.Context, fileID int, taskName str
 		return nil, fmt.Errorf("create analyse task: %w", err)
 	}
 
-	predictResult, err := a.analyser.Run(ctx, fileInfo.Filename)
+	start := time.Now()
+	predictResult, err := a.analyser.Run(ctx, fileInfo.Key)
+	metrics.EcgProcessingSeconds.Observe(time.Since(start).Seconds())
+
+	a.log.Debug("predict result", zap.Any("predictResult", predictResult))
+
 	if err != nil {
+		metrics.EcgProcessedTotal.WithLabelValues("failed").Inc()
+
 		a.log.Error("analyse finished with error", zap.Error(err))
+
 		result, err := a.repo.UpdateAnalyseStatus(ctx, res.ID, model.Failed)
 		if err != nil {
 			a.log.Error("failed to save failed analyse", zap.Error(err))
@@ -200,6 +216,8 @@ func (a *Analyse) runSingleAnalyse(ctx context.Context, fileID int, taskName str
 		}
 		return result, nil
 	}
+
+	metrics.EcgProcessedTotal.WithLabelValues("success").Inc()
 
 	res, err = a.repo.SaveAnalyseResult(
 		ctx,
