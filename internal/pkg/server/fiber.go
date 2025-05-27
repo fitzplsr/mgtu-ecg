@@ -77,6 +77,7 @@ func NewFiberApp(p AppParams) (*fiber.App, error) {
 		analyse.Post("upload", p.AnalyseHandler.UploadFile)
 		analyse.Post("run", p.AnalyseHandler.RunAnalyse)
 		analyse.Put("list_edf", p.AnalyseHandler.ListPatientFiles)
+		analyse.Put("edf", p.AnalyseHandler.GetFileByID)
 		analyse.Put("patient/list", p.AnalyseHandler.ListPatientAnalyses)
 	}
 

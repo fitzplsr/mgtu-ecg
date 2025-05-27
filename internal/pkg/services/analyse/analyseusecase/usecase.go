@@ -245,6 +245,14 @@ func (a *Analyse) ListPatientFiles(ctx context.Context, payload *model.ListPatie
 	return files, err
 }
 
+func (a *Analyse) GetFileByID(ctx context.Context, payload *model.GetFileByIDRequest) (*model.FileInfo, error) {
+	files, err := a.repo.GetFileByID(ctx, payload.FileID)
+	if err != nil {
+		return nil, err
+	}
+	return files, err
+}
+
 func (a *Analyse) ListPatientAnalyses(ctx context.Context, payload *model.ListPatientAnalysesRequest) (*model.AnalyseTasks, error) {
 	filter := payload.Filter
 	filter.AlignLimit()

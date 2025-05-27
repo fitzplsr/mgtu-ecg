@@ -108,6 +108,11 @@ definitions:
       search:
         type: string
     type: object
+  model.GetFileByIDRequest:
+    properties:
+      file_id:
+        type: integer
+    type: object
   model.GetPatient:
     properties:
       id:
@@ -237,6 +242,34 @@ info:
   title: API
   version: "1.0"
 paths:
+  /api/v1/analyse/edf:
+    put:
+      consumes:
+      - application/json
+      description: Get file by ID
+      parameters:
+      - description: file info
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.GetFileByIDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.FileInfo'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get file by ID
+      tags:
+      - analyse
   /api/v1/analyse/list_edf:
     put:
       consumes:

@@ -13,6 +13,7 @@ type Usecase interface {
 	ListPatientFiles(ctx context.Context, payload *model.ListPatientFilesRequest) (*model.PatientFiles, error)
 	ListPatientAnalyses(ctx context.Context, payload *model.ListPatientAnalysesRequest) (*model.AnalyseTasks, error)
 	RunAnalyse(ctx context.Context, req *model.AnalyseRequest) (*model.AnalyseTasks, error)
+	GetFileByID(ctx context.Context, payload *model.GetFileByIDRequest) (*model.FileInfo, error)
 }
 
 type Repo interface {

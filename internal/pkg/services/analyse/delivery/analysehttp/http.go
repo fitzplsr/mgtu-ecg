@@ -124,6 +124,38 @@ func (a *Analyse) ListPatientFiles(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(files)
 }
 
+// @Summary Get file by ID
+// @Description Get file by ID
+// @Tags analyse
+// @Security BearerAuth
+// @Accept application/json
+// @Produce application/json
+// @Param payload body model.GetFileByIDRequest true "file info"
+// @Success 200 {object} model.FileInfo
+// @Failure 500 {object} model.ErrorResponse
+// @Router      /api/v1/analyse/edf [put]
+func (a *Analyse) GetFileByID(c *fiber.Ctx) error {
+	_, ok := c.Locals(middleware.UserIDKey).(uuid.UUID)
+	if !ok {
+		a.log.Error("can't get user id from locals")
+		return utils.Send401(c, messages.Unauthorized)
+	}
+
+	var payload model.GetFileByIDRequest
+	err := c.BodyParser(&payload)
+	if err != nil {
+		a.log.Error("failed to parse request body", zap.Error(err))
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	files, err := a.uc.GetFileByID(c.Context(), &payload)
+	if err != nil {
+		return utils.Send500(c, messages.InternalServerError)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(files)
+}
+
 // @Summary Analyse file
 // @Description Analyse file by it id
 // @Tags analyse

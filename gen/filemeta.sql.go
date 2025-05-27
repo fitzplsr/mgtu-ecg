@@ -99,7 +99,7 @@ const getPatientFileMetas = `-- name: GetPatientFileMetas :many
 SELECT id, format, size, filename, content_type, key, data, patient_id, created_at, updated_at
 FROM filemetas
 WHERE patient_id = $1
-ORDER BY created_at
+ORDER BY created_at DESC
 LIMIT $2 OFFSET $3
 `
 

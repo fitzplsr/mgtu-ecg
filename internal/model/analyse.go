@@ -33,6 +33,11 @@ type ListPatientFilesRequest struct {
 }
 
 //easyjson:json
+type GetFileByIDRequest struct {
+	FileID int `json:"file_id"`
+}
+
+//easyjson:json
 type ListPatientAnalysesRequest struct {
 	PatientID int    `json:"patient_id"`
 	Filter    Filter `json:"filter"`

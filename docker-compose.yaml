@@ -156,15 +156,15 @@ services:
     networks:
       - main-network
 
-  node_exporter:
-    image: prom/node-exporter:latest
-    command: [ "--path.rootfs=/host" ]
-#    network_mode: "host"
-    pid: "host"
-    volumes:
-      - /:/host:ro,rslave
-    networks:
-      - main-network
+#  node_exporter:
+#    image: prom/node-exporter:latest
+#    command: [ "--path.rootfs=/host" ]
+##    network_mode: "host"
+#    pid: "host"
+#    volumes:
+#      - /:/host:ro,rslave
+#    networks:
+#      - main-network
 
   postgres_exporter:
     image: quay.io/prometheuscommunity/postgres-exporter

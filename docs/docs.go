@@ -23,6 +23,51 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/analyse/edf": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get file by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "analyse"
+                ],
+                "summary": "Get file by ID",
+                "parameters": [
+                    {
+                        "description": "file info",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GetFileByIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.FileInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/analyse/list_edf": {
             "put": {
                 "security": [
@@ -737,6 +782,14 @@ const docTemplate = `{
                 },
                 "search": {
                     "type": "string"
+                }
+            }
+        },
+        "model.GetFileByIDRequest": {
+            "type": "object",
+            "properties": {
+                "file_id": {
+                    "type": "integer"
                 }
             }
         },
