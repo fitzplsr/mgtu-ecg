@@ -226,3 +226,16 @@ tasks:
 
   clean:
     docker rm -v -f $(docker ps -qa)
+
+  autotest:
+    cmds:
+      - npx playwright test
+    dir: testing/playwright
+
+  report:
+    cmds:
+      - npx playwright test
+      - allure generate ./allure-results --clean -o ./allure-report
+      - allure open ./allure-report
+    dir: testing/playwright
+

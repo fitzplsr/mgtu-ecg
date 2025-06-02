@@ -40,7 +40,15 @@ import (
 	"go.uber.org/zap"
 )
 
-// TODO services to module?
+//func init() {
+//	const mem512 = 2048 * 1024 * 1024 // байт
+//	debug.SetMemoryLimit(mem512)
+//
+//	// 2) фиксируем количество потоков под контейнер
+//	if procs := runtime.NumCPU(); procs > 2 {
+//		runtime.GOMAXPROCS(2)
+//	}
+//}
 
 // @title Backend API
 // @description API server

@@ -65,11 +65,16 @@ func (a *Analyse) UploadFile(c *fiber.Ctx) error {
 	patientIDStr := c.FormValue("patient_id")
 	patientID, err := strconv.Atoi(patientIDStr)
 	if err != nil {
+		a.log.Error("failed to parse patient ID",
+			zap.String("patient_id", patientIDStr),
+			zap.Error(err),
+		)
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
 	file, err := c.FormFile("file")
 	if err != nil {
+		a.log.Error("missed file", zap.Error(err))
 		return err
 	}
 

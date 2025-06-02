@@ -44,11 +44,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 200M
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '6'
+#          memory: 4096M
     networks:
       - main-network
 
@@ -119,6 +119,11 @@ services:
     build:
       context: .
       dockerfile: ./build/Dockerfile
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: "1.0"
+#          memory: 2048M
     restart: always
     volumes:
       - "./files:/docker-main/files"
@@ -171,6 +176,7 @@ services:
     env_file: .env
     environment:
       - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+      - PG_EXPORTER_EXTEND_QUERY_STATS=true
     depends_on: [ postgres ]
     ports: [ "9187:9187" ]
     networks:
